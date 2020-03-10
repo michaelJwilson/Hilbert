@@ -1,0 +1,20 @@
+This program demonstrates visually how the unit cube may be remapped into a
+cuboid.  It requires a relatively recent version of Python (>= 2.5 should
+suffice), as well the Pyglet multimedia library (available for all platforms
+from www.pyglet.org).
+
+To run:
+    python demo.py
+
+Mouse control:
+    Left-click drag: rotate
+    Right-click drag: pan
+    Mouse wheel: zoom
+
+Key bindings:
+    R: reset view
+    J: snap to unit cube configuration
+    K: snap to remapped cuboid configuration
+    Space: oscillate smoothly between configurations
+    1-9: change cuboid remapping
+    S: save screenshot to file "figure.png"

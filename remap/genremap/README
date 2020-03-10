@@ -1,0 +1,52 @@
+____________
+| genremap |
+------------
+Quick start:
+    make genremap
+    ./genremap 7 > list7.txt
+
+
+The genremap program generates a list of possible cuboid remappings.  It uses a
+brute force search to find invertible 3x3 integer matrices with coefficients in
+the range
+    -Nmax <= u_ij <= Nmax,
+where Nmax may be passed on the command line (default is 5).  Each invertible
+matrix U = (u1,u2,u3) leads to a cuboid with edge vectors e1, e2, e3 given by
+    e1 = u1
+    e2 = u2 + a*u1              (*)
+    e3 = u3 + b*u1 + c*u2
+where a,b,c are chosen to make e1, e2, e3 mutually orthogonal.  Explicitly
+    a = -(u1 . u2)/|u1|^2
+    c = -(a * (u1 . u3) + (u2 . u3)) / (a * (u1 . u2) + |u2|^2)
+    b = -((u1 . u3) + c * (u1 . u2)) / |u1|^2
+where "." denotes a dot product.
+
+The results of this brute force search are printed to stdout (which can be
+easily redirected to file).  The format of the output is as follows:
+- First come two lines commented by a '#' character: line one tells what Nmax
+  was used, line two provides column headers for the remappings to follow.
+- The remappings are then listed, one per line.  The first three columns show
+  the dimensions of the cuboid,
+    L1 = |e1|,  L2 = |e2|,  L3 = |e3|,
+  to four decimal places.  These are the columns that should be investigated
+  when searching for a particular remapping to suit your particular needs.
+  The next nine columns give the coefficients of the integer matrix U that led
+  to this remapping, according to the Equations (*) above.  The last column
+  indicates which of the edge vectors e1, e2, e3 are lattice vectors: the
+  remapped cuboid will be periodic along these directions.
+- The cuboid remappings are sorted by the length of their longest edge.
+  Because of the way the edge vectors e1, e2, e3 are calculated, Equations (*),
+  the longest edge will not necessarily be e1.
+- Note that the edge vectors themselves are not printed.  For numerical
+  reasons, it is best to recalculate these from the integer matrix coefficients
+  in the piece of code that actually performs the remapping.
+
+To compile, try the command:
+    make genremap
+This requires the 'make' program and a C++ compiler.  You can edit the Makefile
+if you want to change the compile flags or force 'make' to use a particular
+compiler.  Once compiled, you would typically run the program with the command:
+    ./genremap 7 > list7.txt
+Note that the run time and output size grow very rapidly with Nmax (the scaling
+is ~ Nmax^7 over the range 2 <= Nmax < 10), so beware.  On an average 2008-era
+laptop, the above command will take a few minutes.
